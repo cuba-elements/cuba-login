@@ -1,0 +1,41 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+`cuba-login`
+
+
+@demo demo/index.html 
+-->
+
+<dom-module id="cuba-login">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+
+    <form id="form">
+      <input type="text" id="username"/>
+      <input type="password" id="password"/>
+      <button type="submit">Login</button>
+    </form>
+
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'cuba-login',
+
+      ready: function() {
+        this.$.form.addEventListener('submit', function() {
+          cubaApp.login(this.$.username, this.$.password).then(function(resp) {
+            this.fire('cuba-logged-in');
+          }.bind(this));
+        }.bind(this));
+      }
+
+    });
+  </script>
+</dom-module>
