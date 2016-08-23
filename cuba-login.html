@@ -29,10 +29,12 @@
       is: 'cuba-login',
 
       ready: function() {
-        this.$.form.addEventListener('submit', function() {
-          cubaApp.login(this.$.username, this.$.password).then(function(resp) {
+        this.$.form.addEventListener('submit', function(e) {
+          e.preventDefault();
+          cubaApp.login(this.$.username.value, this.$.password.value).then(function(resp) {
             this.fire('cuba-logged-in');
           }.bind(this));
+          return false;
         }.bind(this));
       }
 
