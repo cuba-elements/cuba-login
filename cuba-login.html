@@ -1,10 +1,13 @@
 <link rel="import" href="../polymer/polymer.html">
 
+<link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../paper-input/paper-input.html">
+
 <!--
 `cuba-login`
 
 
-@demo demo/index.html 
+@demo demo/index.html
 -->
 
 <dom-module id="cuba-login">
@@ -13,12 +16,32 @@
       :host {
         display: block;
       }
+      #form {
+        @apply(--cuba-login-form);
+      }
+      #username {
+        @apply(--cuba-login-username-input);
+      }
+      #password {
+        @apply(--cuba-login-password-input);
+      }
+      #submit {
+        @apply(--cuba-login-submit-button);
+      }
+      .actions {
+        display: flex;
+        flex-direction: row-reverse;
+        @apply(--cuba-login-actions);
+      }
+
     </style>
 
     <form id="form">
-      <input type="text" id="username"/>
-      <input type="password" id="password"/>
-      <button type="submit">Login</button>
+      <paper-input type="text" id="username" label="User name" value="{{username}}"></paper-input>
+      <paper-input type="password" id="password" label="Password" value="{{password}}"></paper-input>
+      <div class="actions">
+        <paper-button id="submit" on-tap="submit">Login</paper-button>
+      </div>
     </form>
 
   </template>
@@ -28,14 +51,26 @@
 
       is: 'cuba-login',
 
-      ready: function() {
-        this.$.form.addEventListener('submit', function(e) {
-          e.preventDefault();
-          cubaApp.login(this.$.username.value, this.$.password.value).then(function(resp) {
-            this.fire('cuba-logged-in');
-          }.bind(this));
-          return false;
-        }.bind(this));
+      properties: {
+        username: {
+          type: String,
+          value: null
+        },
+        password: {
+          type: String,
+          value: null
+        }
+      },
+
+      submit: function() {
+        cubaApp.login(this.username, this.password).then(
+            function(resp) {
+              this.fire('cuba-login-success');
+            }.bind(this),
+            function() {
+              this.fire('cuba-login-error');
+            }.bind(this)
+        );
       }
 
     });
