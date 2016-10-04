@@ -3,6 +3,8 @@
 <link rel="import" href="../paper-button/paper-button.html">
 <link rel="import" href="../paper-input/paper-input.html">
 
+<link rel="import" href="../iron-a11y-keys/iron-a11y-keys.html"/>
+
 <!--
 `cuba-login`
 
@@ -37,13 +39,16 @@
     </style>
 
     <form id="form">
-      <paper-input type="text" id="username" label="User name" value="{{username}}"></paper-input>
-      <paper-input type="password" id="password" label="Password" value="{{password}}"></paper-input>
+      <div class="fields">
+        <paper-input type="text" id="username" label="User name" value="{{username}}"></paper-input>
+        <paper-input type="password" id="password" label="Password" value="{{password}}"></paper-input>
+      </div>
       <div class="actions">
         <paper-button id="submit" on-tap="submit">Login</paper-button>
       </div>
     </form>
-
+    <iron-a11y-keys id="a11y" target="[[keysTarget]]" keys="enter"
+                    on-keys-pressed="submit"></iron-a11y-keys>
   </template>
 
   <script>
@@ -59,6 +64,12 @@
         password: {
           type: String,
           value: null
+        },
+        keysTarget: {
+          type: Object,
+          value: function() {
+            return this.$$('.fields');
+          }
         }
       },
 
