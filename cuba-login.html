@@ -6,10 +6,7 @@
 <link rel="import" href="../iron-a11y-keys/iron-a11y-keys.html"/>
 
 <!--
-`cuba-login`
-
-
-@demo demo/index.html
+`cuba-login` - basic login form.
 -->
 
 <dom-module id="cuba-login">
@@ -47,7 +44,7 @@
         <paper-button id="submit" on-tap="submit">Login</paper-button>
       </div>
     </form>
-    <iron-a11y-keys id="a11y" target="[[keysTarget]]" keys="enter"
+    <iron-a11y-keys id="a11y" target="[[_keysTarget]]" keys="enter"
                     on-keys-pressed="submit"></iron-a11y-keys>
   </template>
 
@@ -65,7 +62,7 @@
           type: String,
           value: null
         },
-        keysTarget: {
+        _keysTarget: {
           type: Object,
           value: function() {
             return this.$$('.fields');
@@ -85,5 +82,15 @@
       }
 
     });
+
+    /**
+     * Fired on successful login
+     * @event cuba-login-success
+     */
+
+    /**
+     * Fired on login error
+     * @event cuba-login-error
+     */
   </script>
 </dom-module>
