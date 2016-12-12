@@ -1,6 +1,6 @@
 {
   "name": "cuba-login",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "cuba-login.html",
   "dependencies": {
     "polymer": "Polymer/polymer#^1.4.0",
