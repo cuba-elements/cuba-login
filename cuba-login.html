@@ -5,6 +5,8 @@
 
 <link rel="import" href="../iron-a11y-keys/iron-a11y-keys.html"/>
 
+<link rel="import" href="../cuba-app/cuba-localize-behavior.html"/>
+
 <!--
 `cuba-login` - basic login form.
 -->
@@ -37,11 +39,11 @@
 
     <form id="form">
       <div class="fields">
-        <paper-input type="text" id="username" label="User name" value="{{username}}"></paper-input>
-        <paper-input type="password" id="password" label="Password" value="{{password}}"></paper-input>
+        <paper-input type="text" id="username" label="[[msg('User Name')]]" value="{{username}}"></paper-input>
+        <paper-input type="password" id="password" label="[[msg('Password')]]" value="{{password}}"></paper-input>
       </div>
       <div class="actions">
-        <paper-button id="submit" on-tap="submit">msg</paper-button>
+        <paper-button id="submit" on-tap="submit">[[msg('Login')]]</paper-button>
       </div>
     </form>
     <iron-a11y-keys id="a11y" target="[[_keysTarget]]" keys="enter"
@@ -52,6 +54,8 @@
     Polymer({
 
       is: 'cuba-login',
+
+      behaviors: [CubaLocalizeBehavior],
 
       properties: {
         username: {
