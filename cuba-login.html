@@ -5,6 +5,7 @@
 
 <link rel="import" href="../iron-a11y-keys/iron-a11y-keys.html"/>
 
+<link rel="import" href="../cuba-app/cuba-app-aware-behavior.html"/>
 <link rel="import" href="../cuba-app/cuba-localize-behavior.html"/>
 
 <!--
@@ -55,7 +56,7 @@
 
       is: 'cuba-login',
 
-      behaviors: [CubaLocalizeBehavior],
+      behaviors: [CubaLocalizeBehavior, CubaAppAwareBehavior],
 
       properties: {
         username: {
@@ -75,7 +76,7 @@
       },
 
       submit: function() {
-        cubaApp.login(this.username, this.password).then(
+        this.app.login(this.username, this.password).then(
             function(resp) {
               this.fire('cuba-login-success');
             }.bind(this),
