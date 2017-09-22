@@ -67,6 +67,10 @@
           type: String,
           value: null
         },
+        ldap: {
+          type: Boolean,
+          value: false
+        },
         _keysTarget: {
           type: Object,
           value: function () {
@@ -76,7 +80,11 @@
       },
 
       submit: function() {
-        this.app.login(this.username, this.password).then(
+        var options = {};
+        if (this.ldap) {
+          options.tokenEndpont = 'ldap/token';
+        }
+        this.app.login(this.username, this.password, options).then(
             function(resp) {
               this.fire('cuba-login-success');
             }.bind(this),
