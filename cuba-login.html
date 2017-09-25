@@ -82,7 +82,7 @@
       submit: function() {
         var options = {};
         if (this.ldap) {
-          options.tokenEndpont = 'ldap/token';
+          options.tokenEndpoint = 'ldap/token';
         }
         this.app.login(this.username, this.password, options).then(
             function(resp) {
