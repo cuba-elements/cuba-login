@@ -78,10 +78,10 @@
       submit: function() {
         this.app.login(this.username, this.password).then(
             function(resp) {
-              this.fire('cuba-login-success');
+              this.fire('cuba-login-success', {response: resp});
             }.bind(this),
-            function() {
-              this.fire('cuba-login-error');
+            function(errResp) {
+              this.fire('cuba-login-error', {errorResponse: errResp});
             }.bind(this)
         );
       }
