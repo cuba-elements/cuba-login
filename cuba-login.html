@@ -18,18 +18,23 @@
       :host {
         display: block;
       }
+
       #form {
         @apply --cuba-login-form;
       }
+
       #username {
         @apply --cuba-login-username-input;
       }
+
       #password {
         @apply --cuba-login-password-input;
       }
+
       #submit {
         @apply --cuba-login-submit-button;
       }
+
       .actions {
         display: flex;
         flex-direction: row-reverse;
@@ -44,7 +49,9 @@
         <paper-input type="password" id="password" label="[[msg('Password')]]" value="{{password}}"></paper-input>
       </div>
       <div class="actions">
-        <paper-button id="submit" on-tap="submit">[[msg('Login')]]</paper-button>
+        <slot id="loginButtonSlot" name="login-button">
+          <paper-button id="submit">[[msg('Login')]]</paper-button>
+        </slot>
       </div>
     </form>
     <iron-a11y-keys id="a11y" target="[[_keysTarget]]" keys="enter"
@@ -79,18 +86,24 @@
         }
       },
 
-      submit: function() {
+      ready: function () {
+        this.shadowRoot.querySelector('#loginButtonSlot').addEventListener('click', function () {
+          this.submit();
+        }.bind(this));
+      },
+
+      submit: function () {
         var options = {};
         if (this.ldap) {
           options.tokenEndpoint = 'ldap/token';
         }
         this.app.login(this.username, this.password, options).then(
-            function(resp) {
-              this.fire('cuba-login-success', {response: resp});
-            }.bind(this),
-            function(errResp) {
-              this.fire('cuba-login-error', {errorResponse: errResp});
-            }.bind(this)
+          function (resp) {
+            this.fire('cuba-login-success', {response: resp});
+          }.bind(this),
+          function (errResp) {
+            this.fire('cuba-login-error', {errorResponse: errResp});
+          }.bind(this)
         );
       }
 
