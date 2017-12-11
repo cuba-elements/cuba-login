@@ -10,6 +10,31 @@
 
 <!--
 `cuba-login` - basic login form.
+
+Example:
+
+```html
+<cuba-login on-cuba-login-success="_handleLoginSuccess" on-cuba-login-error="_handleLoginError"></cuba-login>
+```
+
+Using custom button:
+
+```html
+<cuba-login>
+  <paper-button slot="login-button">My Custom Login Button</paper-button>
+</cuba-login>
+```
+
+### Styling
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--cuba-login-form`           | Mixin applied to the form element   | {}
+`--cuba-login-username-input` | Mixin applied to the username input | {}
+`--cuba-login-password-input` | Mixin applied to the password input | {}
+`--cuba-login-submit-button`  | Mixin applied to the submit button  | {}
+`--cuba-login-actions`        | Mixin applied to the actions block  | {}
+
 -->
 
 <dom-module id="cuba-login">
@@ -66,18 +91,31 @@
       behaviors: [CubaLocalizeBehavior, CubaAppAwareBehavior],
 
       properties: {
+
+        /**
+         * Username field value
+         */
         username: {
           type: String,
           value: null
         },
+
+        /**
+         * Password field value
+         */
         password: {
           type: String,
           value: null
         },
+
+        /**
+         * Set to true to use LDAP authentication endpoint
+         */
         ldap: {
           type: Boolean,
           value: false
         },
+
         _keysTarget: {
           type: Object,
           value: function () {
