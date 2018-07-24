@@ -25,6 +25,14 @@ Using custom button:
 </cuba-login>
 ```
 
+Insert content before actions (login button)
+
+```html
+<cuba-login>
+  <a href="/restore-password" slot="before-actions">Forgot my password</a>
+</cuba-login>
+```
+
 ### Styling
 
 Custom property | Description | Default
@@ -73,6 +81,7 @@ Custom property | Description | Default
         <paper-input type="text" id="username" label="[[msg('User Name')]]" value="{{username}}"></paper-input>
         <paper-input type="password" id="password" label="[[msg('Password')]]" value="{{password}}"></paper-input>
       </div>
+      <slot name="before-actions"></slot>
       <div class="actions">
         <slot id="loginButtonSlot" name="login-button">
           <paper-button id="submit">[[msg('Login')]]</paper-button>
