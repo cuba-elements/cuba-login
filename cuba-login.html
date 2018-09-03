@@ -133,9 +133,13 @@ Custom property | Description | Default
         }
       },
 
-      ready: function () {
-        this.shadowRoot.querySelector('#loginButtonSlot').addEventListener('click', function () {
-          this.submit();
+      ready() {
+        new Polymer.FlattenedNodesObserver(this.$.loginButtonSlot, function (info) {
+          info.addedNodes.forEach(function(node) {
+            if (node.nodeType === Node.ELEMENT_NODE) {
+              node.addEventListener('click', function() { this.submit() }.bind(this));
+            }
+          }.bind(this));
         }.bind(this));
       },
 
