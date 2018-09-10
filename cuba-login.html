@@ -1,8 +1,5 @@
 <link rel="import" href="../polymer/polymer.html">
 
-<link rel="import" href="../paper-button/paper-button.html">
-<link rel="import" href="../paper-input/paper-input.html">
-
 <link rel="import" href="../iron-a11y-keys/iron-a11y-keys.html"/>
 
 <link rel="import" href="../cuba-app/cuba-app-aware-behavior.html"/>
@@ -25,6 +22,16 @@ Using custom button:
 </cuba-login>
 ```
 
+Using custom inputs:
+
+```html
+<cuba-login>
+  <paper-input slot="username-input" placeholder="User Name"></paper-input>
+  <paper-input slot="password-input" placeholder="Password"></paper-input>
+  <paper-button slot="login-button">My Custom Login Button</paper-button>
+</cuba-login>
+```
+
 Insert content before actions (login button)
 
 ```html
@@ -42,6 +49,8 @@ Custom property | Description | Default
 `--cuba-login-password-input` | Mixin applied to the password input | {}
 `--cuba-login-submit-button`  | Mixin applied to the submit button  | {}
 `--cuba-login-actions`        | Mixin applied to the actions block  | {}
+`--cuba-login-fields`         | Mixin applied to the fields block   | {}
+`--cuba-login-field`          | Mixin applied to the field wrapper  | {}
 
 -->
 
@@ -68,27 +77,45 @@ Custom property | Description | Default
         @apply --cuba-login-submit-button;
       }
 
+      .fields {
+        @apply --cuba-login-fields;
+      }
+
       .actions {
         display: flex;
         flex-direction: row-reverse;
         @apply --cuba-login-actions;
       }
 
+      .field {
+        display: block;
+        @apply --cuba-login-field;
+      }
     </style>
 
-    <form id="form">
+    <form id="form" on-submit="_handleFormSubmit">
       <div class="fields">
-        <paper-input type="text" id="username" label="[[msg('User Name')]]" value="{{username}}"></paper-input>
-        <paper-input type="password" id="password" label="[[msg('Password')]]" value="{{password}}"></paper-input>
+        <div class="field">
+          <slot name="username-input" id="userNameInputSlot">
+            <input type="text" id="username" name="username" placeholder="[[msg('User Name')]]"/>
+          </slot>
+        </div>
+        <div class="field">
+          <slot name="password-input" id="passwordInputSlot">
+            <input type="password" id="password" name="password" placeholder="[[msg('Password')]]"/>
+          </slot>
+        </div>
       </div>
       <slot name="before-actions"></slot>
       <div class="actions">
         <slot id="loginButtonSlot" name="login-button">
-          <paper-button id="submit">[[msg('Login')]]</paper-button>
+          <button id="submit">[[msg('Login')]]</button>
         </slot>
       </div>
     </form>
-    <iron-a11y-keys id="a11y" target="[[_keysTarget]]" keys="enter"
+    <iron-a11y-keys id="a11y"
+                    target="[[_keysTarget]]"
+                    keys="enter"
                     on-keys-pressed="submit"></iron-a11y-keys>
   </template>
 
@@ -102,22 +129,6 @@ Custom property | Description | Default
       properties: {
 
         /**
-         * Username field value
-         */
-        username: {
-          type: String,
-          value: null
-        },
-
-        /**
-         * Password field value
-         */
-        password: {
-          type: String,
-          value: null
-        },
-
-        /**
          * Set to true to use LDAP authentication endpoint
          */
         ldap: {
@@ -128,7 +139,7 @@ Custom property | Description | Default
         _keysTarget: {
           type: Object,
           value: function () {
-            return this.querySelector('.fields');
+            return this.querySelector('.fields input');
           }
         }
       },
@@ -141,6 +152,22 @@ Custom property | Description | Default
             }
           }.bind(this));
         }.bind(this));
+
+        new Polymer.FlattenedNodesObserver(this.$.userNameInputSlot, function (info) {
+          info.addedNodes.forEach(function(node) {
+            if (node.nodeType === Node.ELEMENT_NODE) {
+              this._usernameField = node;
+            }
+          }.bind(this));
+        }.bind(this));
+
+        new Polymer.FlattenedNodesObserver(this.$.passwordInputSlot, function (info) {
+          info.addedNodes.forEach(function(node) {
+            if (node.nodeType === Node.ELEMENT_NODE) {
+              this._passwordField = node;
+            }
+          }.bind(this));
+        }.bind(this));
       },
 
       submit: function () {
@@ -148,7 +175,7 @@ Custom property | Description | Default
         if (this.ldap) {
           options.tokenEndpoint = 'ldap/token';
         }
-        this.app.login(this.username, this.password, options).then(
+        this.app.login(this._usernameField.value, this._passwordField.value, options).then(
           function (resp) {
             this.fire('cuba-login-success', {response: resp});
           }.bind(this),
@@ -156,6 +183,10 @@ Custom property | Description | Default
             this.fire('cuba-login-error', {errorResponse: errResp});
           }.bind(this)
         );
+      },
+
+      _handleFormSubmit: function(e) {
+        e.preventDefault();
       }
 
     });
